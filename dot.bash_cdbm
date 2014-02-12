@@ -1,0 +1,88 @@
+#!/bin/bash
+# vim: tw=0:ts=4:sw=4:et:ft=bash
+# -*- coding: UTF-8 -*-
+
+#. CDBM - Change Directory Bookmark for bash -={
+: ${CDBM_STORE:=${HOME}/.cdbm}
+
+[ -f ${CDBM_STORE} ] && source ${CDBM_STORE} || touch ${CDBM_STORE}
+for cdbml in {a..z}; do
+    bind '"\e'${cdbml^}'":" :cdbm:save '${cdbml^}'\n"'
+    bind '"\e'${cdbml,}'":" :cdbm:load '${cdbml^}'\n"'
+done
+unset cdbml
+bind '"\e\t":" :cdbm:tab\n"'
+
+declare -gA CDBM
+
+function :cdbm:reset_cursor() {
+    tput el
+    pwd
+    tput cuu1
+    tput cuu1
+    tput el
+}
+
+function :cdbm:save() {
+    if [ "${CDBM[${1^}]}" != "${PWD}" ]; then
+        for cdbml in ${!CDBM[@]}; do
+            if [ "${CDBM[${cdbml}]}" == "${PWD}" ]; then
+                CDBM[${cdbml}]=
+            fi
+        done
+        CDBM[${1^}]="${PWD}"
+    else
+        CDBM[${1^}]=
+    fi
+    declare -p CDBM > ${CDBM_STORE}
+    :cdbm:reset_cursor
+}
+
+function :cdbm:load() {
+    source ${CDBM_STORE}
+    local dir="${CDBM[${1^}]-${PWD}}"
+    if [ -d "${dir}" ]; then
+        cd "${CDBM[${1^}]-${PWD}}"
+        :cdbm:reset_cursor
+    fi
+}
+
+function :cdbm:tab() {
+    source ${CDBM_STORE}
+    local dir="${CDBM[${1^}]-${PWD}}"
+    if [ -d "${dir}" ]; then
+        cd -
+        :cdbm:reset_cursor
+    fi
+}
+
+function cdbm:dump() {
+    local cdbml
+    for cdbml in ${!CDBM[@]}; do
+        echo "${cdbml} ${CDBM[$cdbml]}";
+    done
+}
+
+function cdbm:prompt() {
+    source ${CDBM_STORE}
+
+    local cdbm_letter='.'
+    local cdbm_relpath=
+    local -i cdbmsrp=1024 #. CDBM shortest relpath
+    local cdbml
+    for cdbml in ${!CDBM[@]}; do
+        if [ ${#cdbml} -eq 1 ]; then
+            local cdbmrp="${PWD#${CDBM[${cdbml}]}}"
+            if [ "${cdbmrp}" != "${PWD}" -a ${#cdbmrp} -lt ${cdbmsrp} ]; then
+                cdbm_letter=${cdbml}
+                cdbm_relpath="${cdbmrp}"
+                cdbmsrp="${#cdbmrp}"
+            fi
+        else
+            unset CDBM[$cdbml];
+        fi
+    done
+
+    echo "${cdbm_letter}" "${cdbm_relpath}"
+}
+#. }=-
