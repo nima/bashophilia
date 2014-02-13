@@ -1,0 +1,14 @@
+# vim: tw=0:ts=4:sw=4:et:ft=bash
+# -*- coding: UTF-8 -*-
+
+#. Pick your delimiter of choice
+#BOP_DELIM=:
+
+#. Enable the modules of your choice
+#declare -a BOP_MODULES=(
+#    preexec
+#    spacer
+#    cdbm
+#    git
+#    timer
+#)

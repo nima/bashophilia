@@ -17,7 +17,9 @@ adapted to `zsh` (send me a pull request!).
 ## Installation
 
 ```bash
-    cp dot.bash_cdbm ~/.bash_cdbm
+    git clone ...
+
+    source ~/.config/bop/bashophilia.sh
 ```
 
 ## Usage
