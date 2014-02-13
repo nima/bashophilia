@@ -4,7 +4,7 @@
 #. GIT -={
 
 #. Internals -={
-function :bop:git.isrepo() {
+function :boph:git.isrepo() {
     local e=1
 
     local gitrepo=$PWD
@@ -20,11 +20,11 @@ function :bop:git.isrepo() {
     return $e
 }
 
-function :bop:git.status() {
+function :boph:git.status() {
     local -i e=1
 
     local gitrepo
-    gitrepo=$(:bop:git.isrepo)
+    gitrepo=$(:boph:git.isrepo)
     if [ $? -eq 0 ]; then
         local sha1
         local tag
@@ -95,26 +95,26 @@ function :bop:git.status() {
 }
 #. }=-
 
-function bop:git.init() {
-    declare -gA BOP_GIT_SYMBOLS
-    BOP_GIT_SYMBOLS=(
-        [SEPARATOR]="${BOP_COLORS[Cyan]}|"
-        [BRANCH]="${BOP_COLORS[LightRed]}"
-        [STAGED]="${BOP_COLORS[Green]}●"
-        [CONFLICTS]="${BOP_COLORS[Red]}✖"
-        [CHANGED]="${BOP_COLORS[Yellow]}✚"
-        [AHEAD]="${BOP_COLORS[Green]}↑"
-        [BEHIND]="${BOP_COLORS[Red]}↓"
+function boph:git.init() {
+    declare -gA BOPH_GIT_SYMBOLS
+    BOPH_GIT_SYMBOLS=(
+        [SEPARATOR]="${BOPH_COLORS[Cyan]}|"
+        [BRANCH]="${BOPH_COLORS[LightRed]}"
+        [STAGED]="${BOPH_COLORS[Green]}●"
+        [CONFLICTS]="${BOPH_COLORS[Red]}✖"
+        [CHANGED]="${BOPH_COLORS[Yellow]}✚"
+        [AHEAD]="${BOPH_COLORS[Green]}↑"
+        [BEHIND]="${BOPH_COLORS[Red]}↓"
         [UNTRACKED]="…"
-        [CLEAN]="${BOP_COLORS[LightGreen]}✔"
+        [CLEAN]="${BOPH_COLORS[LightGreen]}✔"
     )
 }
 
-function bop:git.prompt() {
+function boph:git.prompt() {
     local -i e=1;
 
     local -a gitstatusdata
-    gitstatusdata=( $(:bop:git.status) )
+    gitstatusdata=( $(:boph:git.status) )
 
     if [ $? -eq 0 ]; then
         local gitstatusstr
@@ -125,8 +125,8 @@ function bop:git.prompt() {
         local -i staged conflicts changed untracked clean ahead behind
         read branch staged conflicts changed untracked clean ahead behind <<< ${gitstatusdata[@]:1}
 
-        gitstatusstr+="${BOP_COLORS[Cyan]}("
-        gitstatusstr+="${BOP_COLORS[Yellow]}"
+        gitstatusstr+="${BOPH_COLORS[Cyan]}("
+        gitstatusstr+="${BOPH_COLORS[Yellow]}"
         if [ -f ${gitrepo}/.git_project_symbol ];
             then gitstatusstr+="$(<${gitrepo}/.git_project_symbol)"
         elif [ -f ${gitrepo}/.git/description ];
@@ -134,26 +134,26 @@ function bop:git.prompt() {
         else
             gitstatusstr+="$(basename ${gitrepo})"
         fi
-        gitstatusstr+="${BOP_COLORS[Cyan]}:"
+        gitstatusstr+="${BOPH_COLORS[Cyan]}:"
 
-        gitstatusstr+="${BOP_GIT_SYMBOLS[BRANCH]}${branch}"
+        gitstatusstr+="${BOPH_GIT_SYMBOLS[BRANCH]}${branch}"
 
         local gitrelpath=${PWD/${gitrepo}/}
-        gitstatusstr+="${BOP_COLORS[Cyan]}:${BOP_COLORS[Green]}${gitrelpath:-/}"
+        gitstatusstr+="${BOPH_COLORS[Cyan]}:${BOPH_COLORS[Green]}${gitrelpath:-/}"
 
-        gitstatusstr+="${BOP_GIT_SYMBOLS[SEPARATOR]}"
-        [ $staged -eq 0 ]    || gitstatusstr+="${BOP_GIT_SYMBOLS[STAGED]}$staged"
-        [ $conflicts -eq 0 ] || gitstatusstr+="${BOP_GIT_SYMBOLS[CONFLICTS]}$conflicts"
-        [ $changed -eq 0 ]   || gitstatusstr+="${BOP_GIT_SYMBOLS[CHANGED]}$changed"
-        [ $untracked -eq 0 ] || gitstatusstr+="${BOP_GIT_SYMBOLS[UNTRACKED]}$untracked"
-        [ $clean -eq 1 ]     && gitstatusstr+="${BOP_GIT_SYMBOLS[CLEAN]}"
+        gitstatusstr+="${BOPH_GIT_SYMBOLS[SEPARATOR]}"
+        [ $staged -eq 0 ]    || gitstatusstr+="${BOPH_GIT_SYMBOLS[STAGED]}$staged"
+        [ $conflicts -eq 0 ] || gitstatusstr+="${BOPH_GIT_SYMBOLS[CONFLICTS]}$conflicts"
+        [ $changed -eq 0 ]   || gitstatusstr+="${BOPH_GIT_SYMBOLS[CHANGED]}$changed"
+        [ $untracked -eq 0 ] || gitstatusstr+="${BOPH_GIT_SYMBOLS[UNTRACKED]}$untracked"
+        [ $clean -eq 1 ]     && gitstatusstr+="${BOPH_GIT_SYMBOLS[CLEAN]}"
 
         if (( ahead + behind )); then
-            gitstatusstr+="${BOP_GIT_SYMBOLS[SEPARATOR]}"
-            (( behind )) && gitstatusstr+="${BOP_GIT_SYMBOLS[BEHIND]}${behind}"
-            (( ahead ))  && gitstatusstr+="${BOP_GIT_SYMBOLS[AHEAD]}${ahead}"
+            gitstatusstr+="${BOPH_GIT_SYMBOLS[SEPARATOR]}"
+            (( behind )) && gitstatusstr+="${BOPH_GIT_SYMBOLS[BEHIND]}${behind}"
+            (( ahead ))  && gitstatusstr+="${BOPH_GIT_SYMBOLS[AHEAD]}${ahead}"
         fi
-        gitstatusstr+="${BOP_COLORS[Cyan]})"
+        gitstatusstr+="${BOPH_COLORS[Cyan]})"
 
         printf "${gitstatusstr}"
         e=0

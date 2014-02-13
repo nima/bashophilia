@@ -1,5 +1,5 @@
 #. COLORS -={
-declare -A BOP_COLORS=(
+declare -A BOPH_COLORS=(
     [Black]="\[\033[0;30m\]"
     [DarkGray]="\[\033[1;30m\]"
     [Red]="\[\033[0;31m\]"

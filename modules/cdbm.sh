@@ -3,10 +3,10 @@
 # -*- coding: UTF-8 -*-
 
 #. CDBM - Change Directory Bookmark for bash -={
-: ${BOP_CDBM_STORE:=${HOME}/.cdbm}
+: ${BOPH_CDBM_STORE:=${HOME}/.cdbm}
 
 #. Internals -={
-function :bop:cdbm.reset_cursor() {
+function :boph:cdbm.reset_cursor() {
     tput el
     pwd
     tput cuu1
@@ -14,95 +14,95 @@ function :bop:cdbm.reset_cursor() {
     tput el
 }
 
-function :bop:cdbm.save() {
-    if [ "${BOP_CDBM[${1^}]}" != "${PWD}" ]; then
-        for cdbml in ${!BOP_CDBM[@]}; do
-            if [ "${BOP_CDBM[${cdbml}]}" == "${PWD}" ]; then
-                BOP_CDBM[${cdbml}]=
+function :boph:cdbm.save() {
+    if [ "${BOPH_CDBM[${1^}]}" != "${PWD}" ]; then
+        for cdbml in ${!BOPH_CDBM[@]}; do
+            if [ "${BOPH_CDBM[${cdbml}]}" == "${PWD}" ]; then
+                BOPH_CDBM[${cdbml}]=
             fi
         done
-        BOP_CDBM[${1^}]="${PWD}"
+        BOPH_CDBM[${1^}]="${PWD}"
     else
-        BOP_CDBM[${1^}]=
+        BOPH_CDBM[${1^}]=
     fi
-    declare -p BOP_CDBM > ${BOP_CDBM_STORE}
-    :bop:cdbm.reset_cursor
+    declare -p BOPH_CDBM > ${BOPH_CDBM_STORE}
+    :boph:cdbm.reset_cursor
 }
 
-function :bop:cdbm.load() {
-    source ${BOP_CDBM_STORE}
-    local dir="${BOP_CDBM[${1^}]-${PWD}}"
+function :boph:cdbm.load() {
+    source ${BOPH_CDBM_STORE}
+    local dir="${BOPH_CDBM[${1^}]-${PWD}}"
     if [ -d "${dir}" ]; then
-        cd "${BOP_CDBM[${1^}]-${PWD}}"
-        :bop:cdbm.reset_cursor
+        cd "${BOPH_CDBM[${1^}]-${PWD}}"
+        :boph:cdbm.reset_cursor
     fi
 }
 
-function :bop:cdbm.tab() {
-    source ${BOP_CDBM_STORE}
+function :boph:cdbm.tab() {
+    source ${BOPH_CDBM_STORE}
     local dir="${OLDPWD}"
     if [ -d "${dir}" ]; then
         cd - >/dev/null
-        :bop:cdbm.reset_cursor
+        :boph:cdbm.reset_cursor
     fi
 }
 
-function :bop:cdbm.dump() {
-    source ${BOP_CDBM_STORE}
+function :boph:cdbm.dump() {
+    source ${BOPH_CDBM_STORE}
     local cdbml
-    for cdbml in ${!BOP_CDBM[@]}; do
-        echo "${cdbml} ${BOP_CDBM[$cdbml]}";
+    for cdbml in ${!BOPH_CDBM[@]}; do
+        echo "${cdbml} ${BOPH_CDBM[$cdbml]}";
     done
 }
 #. }=-
 
-function bop:cdbm.init() {
-    declare -gA BOP_CDBM
-    if [ -f ${BOP_CDBM_STORE} ]; then
-        source ${BOP_CDBM_STORE}
+function boph:cdbm.init() {
+    declare -gA BOPH_CDBM
+    if [ -f ${BOPH_CDBM_STORE} ]; then
+        source ${BOPH_CDBM_STORE}
     else
-        touch ${BOP_CDBM_STORE}
+        touch ${BOPH_CDBM_STORE}
     fi
 
     local cdbml
     for cdbml in {a..z}; do
-        bind '"\e'${cdbml^}'":" :bop:cdbm.save '${cdbml^}'\n"'
-        bind '"\e'${cdbml,}'":" :bop:cdbm.load '${cdbml^}'\n"'
+        bind '"\e'${cdbml^}'":" :boph:cdbm.save '${cdbml^}'\n"'
+        bind '"\e'${cdbml,}'":" :boph:cdbm.load '${cdbml^}'\n"'
     done
-    bind '"\e\t":" :bop:cdbm.tab\n"'
-    bind '"\e?":"  :bop:cdbm.dump\n"'
+    bind '"\e\t":" :boph:cdbm.tab\n"'
+    bind '"\e?":"  :boph:cdbm.dump\n"'
 }
 
-function bop:cdbm.prompt() {
-    source ${BOP_CDBM_STORE}
+function boph:cdbm.prompt() {
+    source ${BOPH_CDBM_STORE}
 
     local cdbm_letter='.'
     local cdbm_relpath=
-    local -i cdbmsrp=1024 #. BOP_CDBM shortest relpath
-    for cdbml in ${!BOP_CDBM[@]}; do
+    local -i cdbmsrp=1024 #. BOPH_CDBM shortest relpath
+    for cdbml in ${!BOPH_CDBM[@]}; do
         if [ ${#cdbml} -eq 1 ]; then
-            local cdbmrp="${PWD#${BOP_CDBM[${cdbml}]}}"
+            local cdbmrp="${PWD#${BOPH_CDBM[${cdbml}]}}"
             if [ "${cdbmrp}" != "${PWD}" -a ${#cdbmrp} -lt ${cdbmsrp} ]; then
                 cdbm_letter=${cdbml}
                 cdbm_relpath="${cdbmrp}"
                 cdbmsrp="${#cdbmrp}"
             fi
         else
-            unset BOP_CDBM[$cdbml];
+            unset BOPH_CDBM[$cdbml];
         fi
     done
 
     local prompt=
     case ${cdbm_letter}:${#cdbm_relpath} in
         .:0)
-            prompt+="${BOP_COLORS[Blue]}\w"
+            prompt+="${BOPH_COLORS[Blue]}\w"
         ;;
         *:0)
-            prompt+="${BOP_COLORS[LightGreen]}${cdbm_letter}"
+            prompt+="${BOPH_COLORS[LightGreen]}${cdbm_letter}"
         ;;
         *:*)
-            prompt+="${BOP_COLORS[LightGreen]}${cdbm_letter}"
-            prompt+="${BOP_COLORS[LightBlue]}${BOP_DELIM}${cdbm_relpath}"
+            prompt+="${BOPH_COLORS[LightGreen]}${cdbm_letter}"
+            prompt+="${BOPH_COLORS[LightBlue]}${BOPH_DELIM}${cdbm_relpath}"
         ;;
     esac
 

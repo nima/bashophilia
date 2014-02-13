@@ -1,7 +1,6 @@
 #. PLATFORM -={
-
 #. Internals -={
-function bop:os.arch() {
+function boph:os.arch() {
     local -i e=1
     if [ -x /usr/bin/oslevel ]; then
         uname -p
@@ -13,7 +12,7 @@ function bop:os.arch() {
     return $e
 }
 
-function bop:os.shorthost() {
+function boph:os.shorthost() {
     local -i e=1
     local hn
 
@@ -31,7 +30,7 @@ function bop:os.shorthost() {
     return $e
 }
 
-function bop:os.vendor() {
+function boph:os.vendor() {
     local -i e=0
 
     local os_dist=Unknown
@@ -61,7 +60,7 @@ function bop:os.vendor() {
     return $e
 }
 
-function bop:os.version() {
+function boph:os.version() {
     local -i e=0
     local osdescr
     local osvermjr
@@ -146,13 +145,13 @@ function hw:vendor() {
     return $e
 }
 #. }=-
-export OS_ARCH=$(bop:os.arch)
-export OS_HOST=$(bop:os.shorthost)
-export OS_VENDOR=$(bop:os.vendor)
-export OS_VERSION=$(bop:os.version)
-export HW_VENDOR=$(hw:vendor)
+OS_ARCH=$(boph:os.arch)
+OS_HOST=$(boph:os.shorthost)
+OS_VENDOR=$(boph:os.vendor)
+OS_VERSION=$(boph:os.version)
+HW_VENDOR=$(boph:hw.vendor)
 
-function :prompt:os_arch() {
+function :boph:platform.os_arch() {
     : ${OS_ARCH?}
 
     local -A symbols=(
@@ -163,7 +162,7 @@ function :prompt:os_arch() {
     echo ${symbols[${OS_ARCH}]}
 }
 
-function :prompt:os_str() {
+function :boph:platform.os_str() {
     : ${OS_VENDOR?}
     : ${OS_VERSION?}
 
@@ -180,7 +179,7 @@ function :prompt:os_str() {
     echo ${COLORS[IBlack]}@${symbols[${OS_VENDOR}]}${OS_VERSION}
 }
 
-function :prompt:hw_vendor() {
+function :boph:platform.hw_vendor() {
     : ${HW_VENDOR?}
 
     local -A symbols=(

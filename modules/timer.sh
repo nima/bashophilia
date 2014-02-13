@@ -3,23 +3,23 @@
 
 
 #. -={
-function bop:timer.init() {
-    declare -gi BOP_TIMER_ELAPSED
+function boph:timer.init() {
+    declare -gi BOPH_TIMER_ELAPSED
 }
 
-function bop:timer.callback() {
-    if [ ! -v BOP_TIMER_SECONDS ]; then
-        declare -gi BOP_TIMER_SECONDS
-        BOP_TIMER_SECONDS=${SECONDS}
+function boph:timer.callback() {
+    if [ ! -v BOPH_TIMER_SECONDS ]; then
+        declare -gi BOPH_TIMER_SECONDS
+        BOPH_TIMER_SECONDS=${SECONDS}
     else
-        ((BOP_TIMER_ELAPSED=SECONDS-BOP_TIMER_SECONDS))
-        unset BOP_TIMER_SECONDS
+        ((BOPH_TIMER_ELAPSED=SECONDS-BOPH_TIMER_SECONDS))
+        unset BOPH_TIMER_SECONDS
         tput el
     fi
 }
 
-function bop:timer.prompt() {
-    printf "${BOP_COLORS[Green]}${BOP_TIMER_ELAPSED}"
+function boph:timer.prompt() {
+    printf "${BOPH_COLORS[Green]}${BOPH_TIMER_ELAPSED}"
 }
 
 #. }=-

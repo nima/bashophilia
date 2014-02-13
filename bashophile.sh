@@ -1,13 +1,13 @@
 # vim: tw=0:ts=4:sw=4:et:ft=bash
 # -*- coding: UTF-8 -*-
 
-#. Mandatory BOP globals and modules -={
+#. Mandatory BOPH globals and modules -={
 #. Configuration -={
-BOP_ROOT=${HOME}/.config/bop
-BOP_MODS=${HOME}/.config/bop/modules
-BOP_DELIM=:
+BOPH_ROOT=${HOME}/.config/bashophilia
+BOPH_MODS=${HOME}/.config/bashophilia/modules
+BOPH_DELIM=:
 #. Enable the modules of your choice, in the order of your choice
-declare -a BOP_MODULES=(
+declare -a BOPH_MODULES=(
     spacer
     cdbm
     git
@@ -18,14 +18,13 @@ declare -a BOP_MODULES=(
 [ ! -r ${HOME}/.boprc ] || source ${HOME}/.boprc
 #. }=-
 #. Sanity Eject Button -={
-[ -e ${BOP_ROOT} ] || exit 1
-source ${BOP_MODS}/color.sh
+source ${BOPH_MODS}/color.sh
 
 #. Add core modules in position
-BOP_MODULES=( preexec ${BOP_MODULES[@]} )
+BOPH_MODULES=( preexec ${BOPH_MODULES[@]} )
 #. }=-
 #. Internals -={
-function :bop:declared() {
+function :boph:declared() {
     local -i e=1
 
     if [ $# -eq 1 ]; then
@@ -36,7 +35,7 @@ function :bop:declared() {
 
     return $e
 }
-function :bop:report() {
+function :boph:report() {
     if [ $1 -eq 0 ]; then
         echo PASS
     else
@@ -45,25 +44,25 @@ function :bop:report() {
 }
 #. }=-
 
-function bop:init() {
+function boph:init() {
     local fn
     local module
     printf "Initializing BashOPhile...\n"
 
-    for module in ${BOP_MODULES[@]}; do
-        source ${BOP_MODS}/${module}.sh
-        fn=bop:${module}.init
-        if :bop:declared ${fn}; then
+    for module in ${BOPH_MODULES[@]}; do
+        source ${BOPH_MODS}/${module}.sh
+        fn=boph:${module}.init
+        if :boph:declared ${fn}; then
             printf " * Initializing ${module}..."
             ${fn}
-            :bop:report $?
+            :boph:report $?
         fi
 
-        fn=bop:${module}.callback
-        if :bop:declared ${fn}; then
+        fn=boph:${module}.callback
+        if :boph:declared ${fn}; then
             printf " * Registering pre-exec hook for ${module}..."
-            bop:preexec.register ${module}
-            :bop:report $?
+            boph:preexec.register ${module}
+            :boph:report $?
         fi
     done
 
@@ -71,25 +70,25 @@ function bop:init() {
     bind Space:magic-space
 }
 
-function bop:prompt() {
+function boph:prompt() {
     local -i e=$?
 
     PS1=
     local fn
     local module
-    for module in ${BOP_MODULES[@]}; do
-        fn=bop:${module}.prompt
-        if :bop:declared ${fn}; then
+    for module in ${BOPH_MODULES[@]}; do
+        fn=boph:${module}.prompt
+        if :boph:declared ${fn}; then
             ps1="$(${fn})"
             if [ ${#ps1} -gt 0 ]; then
-                PS1+=${ps1}${BOP_COLORS[Cyan]}${BOP_DELIM}
+                PS1+=${ps1}${BOPH_COLORS[Cyan]}${BOPH_DELIM}
             fi
         fi
     done
 
-    PS1+="${BOP_COLORS[Cyan]}\$${BOP_COLORS[ResetColor]} "
+    PS1+="${BOPH_COLORS[Cyan]}\$${BOPH_COLORS[ResetColor]} "
 }
 
-bop:init
-export PROMPT_COMMAND=bop:prompt
+boph:init
+export PROMPT_COMMAND=boph:prompt
 #. }=-
