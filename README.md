@@ -1,5 +1,3 @@
-###### vim: tw=0:ts=4:sw=4:et:ft=markdown
-
 # Bashophilia
 _A bookmark manager for your cli, and more_
 
@@ -120,3 +118,7 @@ from https://github.com/magicmonty/bash-git-prompt, and amended to suit.
 
 ### Timer
 This module modifies the prompt with the number of seconds elapsed on each command executed.
+
+---
+###### vim: tw=0:ts=4:sw=4:et:ft=markdown
+
