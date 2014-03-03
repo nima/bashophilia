@@ -13,6 +13,7 @@ BOPH_MODULES=(
     cdbm
     git
     timer
+    exit
 )
 #. Amend if necessary (user-configuration)
 [ ! -r ${HOME}/.boprc ] || source ${HOME}/.boprc
@@ -64,35 +65,28 @@ function boph:init() {
 
 function boph:prompt() {
     local -i e=$?
-    local exitstatus
-    case $e in
-        0)   exitstatus="${BOPH_COLORS[Green]}${e}";;
-        127) exitstatus="${BOPH_COLORS[Yellow]}^?";;
-        130) exitstatus="${BOPH_COLORS[Yellow]}^C";;
-        148) exitstatus="${BOPH_COLORS[Yellow]}^Z";;
-        *)   exitstatus="${BOPH_COLORS[Red]}${e}";;
-    esac
 
     PS1=
     local fn
     local module
+    local delim="${BOPH_COLORS[Cyan]}${BOPH_DELIM}"
     for module in ${BOPH_MODULES[@]}; do
         fn=boph:${module}.terminate
         if :boph:declared ${fn}; then
-            ${fn}
+            ${fn} $e
         fi
 
         fn=boph:${module}.prompt
         if :boph:declared ${fn}; then
-            ps1="$(${fn})"
+            ps1="$(${fn} $e)"
             if [ ${#ps1} -gt 0 ]; then
-                PS1+=${ps1}${BOPH_COLORS[Cyan]}${BOPH_DELIM}
+                PS1+="${delim}"
+                PS1+="${ps1}"
             fi
         fi
     done
 
-    PS1+="${exitstatus}${BOPH_COLORS[Cyan]}${BOPH_DELIM}"
-    PS1+="${BOPH_COLORS[Cyan]}\$${BOPH_COLORS[ResetColor]} "
+    PS1="${PS1:${#delim}}${BOPH_COLORS[Cyan]}\$${BOPH_COLORS[ResetColor]} "
 }
 
 boph:init
