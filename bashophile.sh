@@ -64,6 +64,14 @@ function boph:init() {
 
 function boph:prompt() {
     local -i e=$?
+    local exitstatus
+    case $e in
+        0)   exitstatus="${BOPH_COLORS[Green]}${e}";;
+        127) exitstatus="${BOPH_COLORS[Yellow]}^?";;
+        130) exitstatus="${BOPH_COLORS[Yellow]}^C";;
+        148) exitstatus="${BOPH_COLORS[Yellow]}^Z";;
+        *)   exitstatus="${BOPH_COLORS[Red]}${e}";;
+    esac
 
     PS1=
     local fn
@@ -83,6 +91,7 @@ function boph:prompt() {
         fi
     done
 
+    PS1+="${exitstatus}${BOPH_COLORS[Cyan]}${BOPH_DELIM}"
     PS1+="${BOPH_COLORS[Cyan]}\$${BOPH_COLORS[ResetColor]} "
 }
 
