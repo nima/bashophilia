@@ -1,7 +1,7 @@
 # vim: tw=0:ts=4:sw=4:et:ft=bash
 # -*- coding: UTF-8 -*-
 
-function boph:title.callback() {
+function boph:title.preexec() {
     case ${TERM} in
         xterm*|st*)
             local TitleStart="\033]0;"

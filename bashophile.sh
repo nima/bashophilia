@@ -7,23 +7,22 @@ BOPH_ROOT=${HOME}/.config/bashophilia
 BOPH_MODS=${HOME}/.config/bashophilia/modules
 BOPH_DELIM=:
 #. Enable the modules of your choice, in the order of your choice
-declare -a BOPH_MODULES=(
+declare -ga BOPH_MODULES
+BOPH_MODULES=(
     spacer
     cdbm
     git
     timer
 )
-
 #. Amend if necessary (user-configuration)
 [ ! -r ${HOME}/.boprc ] || source ${HOME}/.boprc
-#. }=-
-#. Sanity Eject Button -={
-source ${BOPH_MODS}/color.sh
 
 #. Add core modules in position
 BOPH_MODULES=( preexec ${BOPH_MODULES[@]} )
 #. }=-
 #. Internals -={
+source ${BOPH_MODS}/color.sh
+
 function :boph:declared() {
     local -i e=1
 
@@ -57,13 +56,6 @@ function boph:init() {
             ${fn}
             :boph:report $?
         fi
-
-        fn=boph:${module}.callback
-        if :boph:declared ${fn}; then
-            printf " * Registering pre-exec hook for ${module}..."
-            boph:preexec.register ${module}
-            :boph:report $?
-        fi
     done
 
     #. This is out of place, but just nice to have
@@ -77,6 +69,11 @@ function boph:prompt() {
     local fn
     local module
     for module in ${BOPH_MODULES[@]}; do
+        fn=boph:${module}.terminate
+        if :boph:declared ${fn}; then
+            ${fn}
+        fi
+
         fn=boph:${module}.prompt
         if :boph:declared ${fn}; then
             ps1="$(${fn})"

@@ -2,50 +2,42 @@
 # -*- coding: UTF-8 -*-
 
 #. BOPH_PREEXEC -={
-
-#. Internals -={
+#. Internals -=
 :boph:preexec.run() {
-    ${BOPH_PREEXEC[ALWAYS]}
-    if [ $# -ge 1 ]; then
-        for key in $@; do
-            ${BOPH_PREEXEC[${key}]}
-        done
+    local fntype
+    if [ ${BOPH_PERSIST} == "on" ]; then
+        BOPH_PERSIST=off
+        fntype=preexec
     else
-        for key in ${!BOPH_PREEXEC[@]}; do
-            ${BOPH_PREEXEC[${key}]}
-        done
+        BOPH_PERSIST=on
+        fntype=postexec
     fi
+
+    local fn module
+    for module in ${BOPH_MODULES[@]}; do
+        fn=boph:${module}.${fntype}
+        if :boph:declared ${fn}; then
+            ${fn}
+        fi
+    done
 }
 
 :boph:preexec() {
-    #. do nothing if completing
-    if [ -z "$COMP_LINE" ]; then
+    #. do nothing if completing, otherwise...
+    if [ -z "${COMP_LINE}" ]; then
         local cmd=$(history 1 | sed -e "s/^[ ]*[0-9]\+[ ]\+//g");
-        :boph:preexec.run "${cmd}"
+        :boph:preexec.run
     fi
 }
 #. }=-
 
-boph:preexec.register() {
-    local -i e=1
-
-    if [ $# -eq 1 ]; then
-        local module=$1
-        BOPH_PREEXEC[ALWAYS]+=" boph:${module}.callback"
-        e=0
-    elif [ $# -gt 1 ]; then
-        local key
-        key=$1
-        shift
-        BOPH_PREEXEC[${key}]="$*"
-        e=0
-    fi
-
-    return $e
+boph:preexec.terminate() {
+    BOPH_PERSIST=on
 }
 
 boph:preexec.init() {
     declare -gA BOPH_PREEXEC
+    declare -g BOPH_PERSIST=on
     trap ':boph:preexec' DEBUG
 }
 

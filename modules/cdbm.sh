@@ -15,6 +15,8 @@ function :boph:cdbm.reset_cursor() {
 }
 
 function :boph:cdbm.save() {
+    source ${BOPH_CDBM_STORE}
+
     if [ "${BOPH_CDBM[${1^}]}" != "${PWD}" ]; then
         for cdbml in ${!BOPH_CDBM[@]}; do
             if [ "${BOPH_CDBM[${cdbml}]}" == "${PWD}" ]; then
@@ -31,6 +33,7 @@ function :boph:cdbm.save() {
 
 function :boph:cdbm.load() {
     source ${BOPH_CDBM_STORE}
+
     local dir="${BOPH_CDBM[${1^}]-${PWD}}"
     if [ -d "${dir}" ]; then
         cd "${BOPH_CDBM[${1^}]-${PWD}}"
@@ -40,6 +43,7 @@ function :boph:cdbm.load() {
 
 function :boph:cdbm.tab() {
     source ${BOPH_CDBM_STORE}
+
     local dir="${OLDPWD}"
     if [ -d "${dir}" ]; then
         cd - >/dev/null
@@ -49,6 +53,7 @@ function :boph:cdbm.tab() {
 
 function :boph:cdbm.dump() {
     source ${BOPH_CDBM_STORE}
+
     local cdbml
     for cdbml in ${!BOPH_CDBM[@]}; do
         echo "${cdbml} ${BOPH_CDBM[$cdbml]}";
@@ -58,6 +63,7 @@ function :boph:cdbm.dump() {
 
 function boph:cdbm.init() {
     declare -gA BOPH_CDBM
+
     if [ -f ${BOPH_CDBM_STORE} ]; then
         source ${BOPH_CDBM_STORE}
     else
