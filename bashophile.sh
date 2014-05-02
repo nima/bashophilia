@@ -11,6 +11,7 @@ declare -ga BOPH_MODULES
 BOPH_MODULES=(
     spacer
     cdbm
+    ssh
     git
     timer
     exit
