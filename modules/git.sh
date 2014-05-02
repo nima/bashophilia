@@ -127,10 +127,16 @@ function boph:git.prompt() {
 
         gitstatusstr+="${BOPH_COLORS[Cyan]}("
         gitstatusstr+="${BOPH_COLORS[Yellow]}"
-        if [ -f ${gitrepo}/.git_project_symbol ];
-            then gitstatusstr+="$(<${gitrepo}/.git_project_symbol)"
-        elif [ -f ${gitrepo}/.git/description ];
-            then gitstatusstr+="$(<${gitrepo}/.git/description)"
+        if [ -f ${gitrepo}/.git_project_symbol ]; then
+            gitstatusstr+="$(<${gitrepo}/.git_project_symbol)"
+        elif [ -f ${gitrepo}/.git/description ]; then
+            local virgin="a0a7c3fff21f2aea3cfa1d0316dd816c"
+            local actual="$(:boph:md5 ${gitrepo}/.git/description)"
+            if [ ${actual} != "${virgin}" ]; then
+                gitstatusstr+="$(<${gitrepo}/.git/description)"
+            else
+                gitstatusstr+="$(basename ${gitrepo})"
+            fi
         else
             gitstatusstr+="$(basename ${gitrepo})"
         fi

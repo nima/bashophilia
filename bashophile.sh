@@ -24,6 +24,17 @@ BOPH_MODULES=( preexec ${BOPH_MODULES[@]} )
 #. Internals -={
 source ${BOPH_MODS}/color.sh
 
+function :boph:md5() {
+    local -i e=1
+
+    if [ -e "${1}" ]; then
+        md5sum $1|awk '{print$1}'
+        e=0
+    fi
+
+    return $e
+}
+
 function :boph:declared() {
     local -i e=1
 
@@ -68,6 +79,7 @@ function boph:prompt() {
 
     PS1=
     local fn
+    local ps1
     local module
     local delim="${BOPH_COLORS[Cyan]}${BOPH_DELIM}"
     for module in ${BOPH_MODULES[@]}; do
