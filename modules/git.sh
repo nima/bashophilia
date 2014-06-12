@@ -9,7 +9,7 @@ function :boph:git.isrepo() {
 
     local gitrepo=$PWD
     while [ ! -d "${gitrepo}/.git" -a "${gitrepo}" != '/' ]; do
-        gitrepo=$(coreutils readlink -f "${gitrepo}/..")
+        gitrepo=$(readlink -f "${gitrepo}/..")
     done
 
     if [ "${gitrepo}" != '/' ]; then
