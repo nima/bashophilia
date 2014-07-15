@@ -7,7 +7,7 @@
 function :boph:git.isrepo() {
     local e=1
 
-    local gitrepo=$PWD
+    local gitrepo=${BOPH_PWD?}
     while [ ! -d "${gitrepo}/.git" -a "${gitrepo}" != '/' ]; do
         gitrepo=$(readlink -f "${gitrepo}/..")
     done
@@ -144,7 +144,7 @@ function boph:git.prompt() {
 
         gitstatusstr+="${BOPH_GIT_SYMBOLS[BRANCH]}${branch}"
 
-        local gitrelpath=${PWD/${gitrepo}/}
+        local gitrelpath=${BOPH_PWD/${gitrepo}/}
         gitstatusstr+="${BOPH_COLORS[Cyan]}:${BOPH_COLORS[Green]}${gitrelpath:-/}"
 
         gitstatusstr+="${BOPH_GIT_SYMBOLS[SEPARATOR]}"

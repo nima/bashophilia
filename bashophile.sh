@@ -79,6 +79,7 @@ function boph:prompt() {
     local -i e=$?
 
     PS1=
+    local BOPH_PWD=$(readlink -f "${PWD}")
     local fn
     local ps1
     local module
