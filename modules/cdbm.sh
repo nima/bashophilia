@@ -28,7 +28,7 @@ function :boph:cdbm.save() {
         done
         BOPH_CDBM[${1^}]="${PWD}"
     else
-        BOPH_CDBM[${1^}]=
+        unset BOPH_CDBM[${1^}]
     fi
     declare -p BOPH_CDBM|tr -d "'" > ${BOPH_CDBM_STORE}
     :boph:cdbm.reset_cursor
