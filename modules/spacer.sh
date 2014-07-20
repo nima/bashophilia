@@ -15,6 +15,6 @@ function boph:spacer.init() {
     declare -gi BOPH_COLS
     BOPH_COLS=$(tput cols)
     [ ${BOPH_COLS} -gt 0 ] || BOPH_COLS=${COLUMNS:-80}
-    bind '"[C": ":boph:spacer.draw ">"\n"'
-    bind '"[D": ":boph:spacer.draw "<"\n"'
+    bind -x '"[C": ":boph:spacer.draw \>"'
+    bind -x '"[D": ":boph:spacer.draw \<"'
 }

@@ -7,11 +7,14 @@
 
 #. Internals -={
 function :boph:cdbm.reset_cursor() {
-    tput el
-    pwd
-    tput cuu1
-    tput cuu1
-    tput el
+    READLINE_LINE="#. Now in $(pwd)"
+
+    #. Without (bind) `-x':
+    #tput el
+    #pwd
+    #tput cuu1
+    #tput cuu1
+    #tput el
 }
 
 function :boph:cdbm.save() {
@@ -72,11 +75,11 @@ function boph:cdbm.init() {
 
     local cdbml
     for cdbml in {a..z}; do
-        bind '"\e'${cdbml^}'":" :boph:cdbm.save '${cdbml^}'\n"'
-        bind '"\e'${cdbml,}'":" :boph:cdbm.load '${cdbml^}'\n"'
+        bind -x '"\e'${cdbml^}'":" :boph:cdbm.save '${cdbml^}'"'
+        bind -x '"\e'${cdbml,}'":" :boph:cdbm.load '${cdbml^}'"'
     done
-    bind '"\e\t":" :boph:cdbm.tab\n"'
-    bind '"\e?":"  :boph:cdbm.dump\n"'
+    bind -x '"\e\t":" :boph:cdbm.tab"'
+    bind -x '"\e?":"  :boph:cdbm.dump"'
 }
 
 function boph:cdbm.prompt() {
