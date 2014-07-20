@@ -85,6 +85,7 @@ function boph:cdbm.init() {
 function boph:cdbm.prompt() {
     source ${BOPH_CDBM_STORE}
 
+    local gitted
     local cdbm_letter='.'
     local cdbm_relpath=
     local -i cdbmsrp=1024 #. BOPH_CDBM shortest relpath
@@ -93,8 +94,14 @@ function boph:cdbm.prompt() {
             local cdbmrp="${PWD#${BOPH_CDBM[${cdbml}]}}"
             if [ "${cdbmrp}" != "${PWD}" -a ${#cdbmrp} -lt ${cdbmsrp} ]; then
                 cdbm_letter=${cdbml}
-                cdbm_relpath="${cdbmrp}"
+                gitted=$(git rev-parse --show-toplevel 2>/dev/null)
+                if [ $? -ne 0 ]; then
+                    cdbm_relpath="${cdbmrp}"
+                #else
+                #    cdbm_relpath="${cdbmrp//${gitted}}"
+                fi
                 cdbmsrp="${#cdbmrp}"
+                break
             fi
         else
             unset BOPH_CDBM[$cdbml];
@@ -104,7 +111,12 @@ function boph:cdbm.prompt() {
     local prompt=
     case ${cdbm_letter}:${#cdbm_relpath} in
         .:0)
-            prompt+="${BOPH_COLORS[Blue]}\w"
+            gitted=$(git rev-parse --show-toplevel 2>/dev/null)
+            if [ $? -eq 0 ]; then
+                prompt+="${BOPH_COLORS[Blue]}${gitted}"
+            else
+                prompt+="${BOPH_COLORS[Blue]}${PWD}"
+            fi
         ;;
         *:0)
             prompt+="${BOPH_COLORS[LightGreen]}${cdbm_letter}"
