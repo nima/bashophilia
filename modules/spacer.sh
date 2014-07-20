@@ -2,6 +2,10 @@
 # -*- coding: UTF-8 -*-
 
 function :boph:spacer.draw() {
+    declare -gi BOPH_COLS
+    BOPH_COLS=$(tput cols)
+    [ ${BOPH_COLS} -gt 0 ] || BOPH_COLS=${COLUMNS:-80}
+
     local pattern="${*:-#}"
     if [ ${#pattern} -gt 0 ] ; then
         local -i repeat=1
@@ -12,9 +16,6 @@ function :boph:spacer.draw() {
 }
 
 function boph:spacer.init() {
-    declare -gi BOPH_COLS
-    BOPH_COLS=$(tput cols)
-    [ ${BOPH_COLS} -gt 0 ] || BOPH_COLS=${COLUMNS:-80}
     bind -x '"[C": ":boph:spacer.draw \>"'
     bind -x '"[D": ":boph:spacer.draw \<"'
 }
