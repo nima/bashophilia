@@ -7,7 +7,7 @@
 
 #. Internals -={
 function :boph:cdbm.reset_cursor() {
-    READLINE_LINE="#. Now in $(pwd)"
+    READLINE_LINE=" #. Now in $(pwd)"
 
     #. Without (bind) `-x':
     #tput el
