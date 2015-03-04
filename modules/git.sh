@@ -32,7 +32,7 @@ function :boph:git.status() {
         local branch
         branch=$(git symbolic-ref HEAD 2>/dev/null)
         if [ $? -eq 0 ]; then
-            branch="$(basename ${branch})"
+            branch="${branch##refs/heads/}"
             title="${branch}"
         else
             tag=$(git describe --exact-match 2>/dev/null)
@@ -51,7 +51,6 @@ function :boph:git.status() {
 
         local -i clean=0
         (( staged + changed + conflicts + untracked )) || clean=1
-
         local -i ahead=0
         local -i behind=0
         if [ -n "${branch}" ]; then
@@ -63,7 +62,7 @@ function :boph:git.status() {
                 if [ "${remote_name}" == '.' ]; then
                     remote_ref="${merge_name}"
                 else
-                    remote_ref="refs/remotes/${remote_name}/$(basename ${merge_name})"
+                    remote_ref="refs/remotes/${remote_name}/${merge_name##refs/heads/}"
                 fi
 
                 local revgit
@@ -160,6 +159,14 @@ function boph:git.prompt() {
             (( ahead ))  && gitstatusstr+="${BOPH_GIT_SYMBOLS[AHEAD]}${ahead}"
         fi
         gitstatusstr+="${BOPH_COLORS[Cyan]})"
+
+        if [[ ${branch} =~ ^feature ]]; then
+            local dvl=$(git rev-parse develop);\
+            local anc=$(git merge-base develop ${branch})
+            if [ "${dvl}" != "${anc}" ]; then
+                gitstatusstr+="${BOPH_COLORS[Cyan]}:${BOPH_COLORS[Red]}<filthy>"
+            fi
+        fi
 
         printf "${gitstatusstr}"
         e=0
