@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 function :boph:spacer.draw() {
-    declare -gi BOPH_COLS
+    declare -i BOPH_COLS
     BOPH_COLS=$(tput cols)
     [ ${BOPH_COLS} -gt 0 ] || BOPH_COLS=${COLUMNS:-80}
 

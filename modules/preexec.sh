@@ -36,8 +36,8 @@ boph:preexec.terminate() {
 }
 
 boph:preexec.init() {
-    declare -gA BOPH_PREEXEC
-    declare -g BOPH_PERSIST=on
+    declare -A BOPH_PREEXEC
+    declare BOPH_PERSIST=on
     trap ':boph:preexec' DEBUG
 }
 

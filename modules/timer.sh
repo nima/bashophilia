@@ -3,12 +3,12 @@
 
 #. -={
 function boph:timer.init() {
-    declare -gi BOPH_TIMER_ELAPSED
+    declare -i BOPH_TIMER_ELAPSED
     BOPH_TIMER_ELAPSED=0
 }
 
 function boph:timer.preexec() {
-    declare -gi BOPH_TIMER_SECONDS
+    declare -i BOPH_TIMER_SECONDS
     BOPH_TIMER_SECONDS=$SECONDS
     tput el
 }

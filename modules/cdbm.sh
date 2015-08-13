@@ -65,7 +65,7 @@ function :boph:cdbm.dump() {
 #. }=-
 
 function boph:cdbm.init() {
-    declare -gA BOPH_CDBM
+    declare -A BOPH_CDBM
 
     if [ -f ${BOPH_CDBM_STORE} ]; then
         source ${BOPH_CDBM_STORE}

@@ -7,7 +7,7 @@ BOPH_ROOT=${HOME}/.config/bashophilia
 BOPH_MODS=${HOME}/.config/bashophilia/modules
 BOPH_DELIM=:
 #. Enable the modules of your choice, in the order of your choice
-declare -ga BOPH_MODULES
+declare -a BOPH_MODULES
 BOPH_MODULES=(
     spacer
     cdbm

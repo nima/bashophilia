@@ -95,7 +95,7 @@ function :boph:git.status() {
 #. }=-
 
 function boph:git.init() {
-    declare -gA BOPH_GIT_SYMBOLS
+    declare -A BOPH_GIT_SYMBOLS
     BOPH_GIT_SYMBOLS=(
         [SEPARATOR]="${BOPH_COLORS[Cyan]}|"
         [BRANCH]="${BOPH_COLORS[LightRed]}"
