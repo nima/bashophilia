@@ -5,7 +5,7 @@
 #. Internals -=
 :boph:preexec.run() {
     local fntype
-    if [ ${BOPH_PERSIST} == "on" ]; then
+    if [ "${BOPH_PERSIST}" == "on" ]; then
         BOPH_PERSIST=off
         fntype=preexec
     else
