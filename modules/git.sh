@@ -160,9 +160,10 @@ function boph:git.prompt() {
         fi
         gitstatusstr+="${BOPH_COLORS[Cyan]})"
 
+        local develop="$(git config --get gitflow.branch.develop)"
         if [[ ${branch} =~ ^feature ]]; then
-            local dvl=$(git rev-parse develop);\
-            local anc=$(git merge-base develop ${branch})
+            local dvl=$(git rev-parse ${develop});\
+            local anc=$(git merge-base ${develop} ${branch})
             if [ "${dvl}" != "${anc}" ]; then
                 gitstatusstr+="${BOPH_COLORS[Cyan]}:${BOPH_COLORS[Red]}<filthy>"
             fi
