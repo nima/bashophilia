@@ -84,6 +84,8 @@ function boph:prompt() {
     local ps1
     local module
     local delim="${BOPH_COLORS[Cyan]}${BOPH_DELIM}"
+    PS1+="${delim}"
+    PS1+="$(date +'%Y-%m-%dT%H:%M:%S%:::z')"
     for module in ${BOPH_MODULES[@]}; do
         fn=boph:${module}.terminate
         if :boph:declared ${fn}; then
@@ -100,7 +102,7 @@ function boph:prompt() {
         fi
     done
 
-    PS1="${PS1:${#delim}}${BOPH_COLORS[Cyan]}\\\$${BOPH_COLORS[ResetColor]} "
+    PS1="${PS1:${#delim}}\n${BOPH_COLORS[Cyan]}\\\$${BOPH_COLORS[ResetColor]} "
 }
 
 boph:init
