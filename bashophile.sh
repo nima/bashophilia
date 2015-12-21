@@ -102,7 +102,10 @@ function boph:prompt() {
         fi
     done
 
-    PS1="${PS1:${#delim}}\n${BOPH_COLORS[Cyan]}\\\$${BOPH_COLORS[ResetColor]} "
+    PS1="${PS1:${#delim}}"
+    PS1+="${BOPH_COLORS[ResetColor]}\n"
+    PS1+="\$ "
+    #PS1+="${BOPH_COLORS[Cyan]}\\\$${BOPH_COLORS[ResetColor]} "
 }
 
 boph:init
