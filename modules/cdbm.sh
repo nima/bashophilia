@@ -92,16 +92,18 @@ function boph:cdbm.prompt() {
     for cdbml in ${!BOPH_CDBM[@]}; do
         if [ ${#cdbml} -eq 1 ]; then
             local cdbmrp="${PWD#${BOPH_CDBM[${cdbml}]}}"
-            if [ "${cdbmrp}" != "${PWD}" -a ${#cdbmrp} -lt ${cdbmsrp} ]; then
-                cdbm_letter=${cdbml}
-                gitted=$(git rev-parse --show-toplevel 2>/dev/null)
-                if [ $? -ne 0 ]; then
-                    cdbm_relpath="${cdbmrp}"
-                #else
-                #    cdbm_relpath="${cdbmrp//${gitted}}"
+            if [ ${#cdbmrp} -lt ${cdbmsrp} ] && [ "${cdbmrp}" != "${PWD}" ]; then
+                if [ ${#cdbmrp} -gt 0 ] && [ ${cdbmrp:0:1} == '/' ] || [ ${#cdbmrp} -eq 0 ]; then
+                    cdbm_letter=${cdbml}
+                    gitted=$(git rev-parse --show-toplevel 2>/dev/null)
+                    if [ $? -ne 0 ]; then
+                        cdbm_relpath="${cdbmrp}"
+                    #else
+                    #    cdbm_relpath="${cdbmrp//${gitted}}"
+                    fi
+                    cdbmsrp="${#cdbmrp}"
+                    break
                 fi
-                cdbmsrp="${#cdbmrp}"
-                break
             fi
         else
             unset BOPH_CDBM[$cdbml];
