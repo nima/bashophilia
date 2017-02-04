@@ -25,11 +25,13 @@ BOPH_MODULES=( preexec ${BOPH_MODULES[@]} )
 #. Internals -={
 source ${BOPH_MODS}/color.sh
 
+MD5=$(which md5sum 2>/dev/null)
+[ $? -eq 0 ] || MD5=$(which md5)
 function :boph:md5() {
     local -i e=1
 
     if [ -e "${1}" ]; then
-        md5sum $1|awk '{print$1}'
+        ${MD5} $1|awk '{print$1}'
         e=0
     fi
 
@@ -47,6 +49,7 @@ function :boph:declared() {
 
     return $e
 }
+
 function :boph:report() {
     if [ $1 -eq 0 ]; then
         echo PASS
