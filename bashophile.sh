@@ -64,18 +64,23 @@ function boph:init() {
     local module
     printf "Initializing BashOPhile...\n"
 
-    for module in ${BOPH_MODULES[@]}; do
-        source ${BOPH_MODS}/${module}.sh
-        fn=boph:${module}.init
-        if :boph:declared ${fn}; then
-            printf " * Initializing ${module}..."
-            ${fn}
-            :boph:report $?
-        fi
-    done
+    readlink --version|grep -q GNU
+    if [ $? -eq 0 ]; then
+        for module in ${BOPH_MODULES[@]}; do
+            source ${BOPH_MODS}/${module}.sh
+            fn=boph:${module}.init
+            if :boph:declared ${fn}; then
+                printf " * Initializing ${module}..."
+                ${fn}
+                :boph:report $?
+            fi
+        done
 
-    #. This is out of place, but just nice to have
-    bind Space:magic-space
+        #. This is out of place, but just nice to have
+        bind Space:magic-space
+    else
+        echo 'FAIL (GNU readlink missing)'
+    fi
 }
 
 function boph:prompt() {
