@@ -1,7 +1,7 @@
 # vim: tw=0:ts=4:sw=4:et:ft=bash
 # -*- coding: UTF-8 -*-
 
-declare -i BOPH_TIMER_SECONDS
+declare -i BOPH_TIMER_SECONDS=0
 
 #. -={
 function boph:timer.init() {
@@ -15,6 +15,7 @@ function boph:timer.preexec() {
 }
 
 function boph:timer.postexec() {
+    : ${BOPH_TIMER_SECONDS:=0}
     ((BOPH_TIMER_ELAPSED=SECONDS-BOPH_TIMER_SECONDS))
 }
 #. }=-

@@ -1,6 +1,8 @@
 # vim: tw=0:ts=4:sw=4:et:ft=bash
 # -*- coding: UTF-8 -*-
 
+set -u
+
 #. Mandatory BOPH globals and modules -={
 #. Configuration -={
 BOPH_ROOT=${HOME}/.config/bashophilia
@@ -119,3 +121,5 @@ function boph:prompt() {
 boph:init
 export PROMPT_COMMAND=boph:prompt
 #. }=-
+
+set +u

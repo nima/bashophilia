@@ -4,7 +4,7 @@
 
 #. SSH - Show hostnames when on remote host -={
 function boph:ssh.prompt() {
-    if [ ${#SSH_CONNECTION} -gt 0 ]; then
+    if [ "${SSH_CONNECTION:-UnsetOrNull}" != 'UnsetOrNull' ]; then
         local prompt="${BOPH_COLORS[LightRed]}@${BOPH_COLORS[Red]}\h"
         printf "${prompt}"
     fi

@@ -5,7 +5,7 @@
 #. Internals -=
 :boph:preexec.run() {
     local fntype
-    if [ "${BOPH_PERSIST}" == "on" ]; then
+    if [ "${BOPH_PERSIST:-off}" == "on" ]; then
         BOPH_PERSIST=off
         fntype=preexec
     else
@@ -24,7 +24,7 @@
 
 :boph:preexec() {
     #. do nothing if completing, otherwise...
-    if [ -z "${COMP_LINE}" ]; then
+    if [ "${COMP_LINE:-UnsetOrNull}" == 'UnsetOrNull' ]; then
         local cmd=$(history 1 | sed -e "s/^[ ]*[0-9]\+[ ]\+//g");
         :boph:preexec.run
     fi
